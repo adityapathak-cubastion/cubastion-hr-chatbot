@@ -1,5 +1,6 @@
 # Cubastion's HR Chatbot
 
+#### Available on Cubastion's network: <a href = "http://hr-chatbot-container.cubastion.net:8501/">http://hr-chatbot-container.cubastion.net:8501/</a>
 Get your queries related to Cubastion's HR policies resolved in seconds by simply asking the <b><i>Cubastion-HR-Chatbot</i></b>!<br>
 Check out <a href = "https://github.com/adityapathak-cubastion/cubastion-hr-chatbot/blob/main/documentation/quickDemo_HR-Chatbot.mp4">this video</a> for a quick demo of how it works.
 
