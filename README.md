@@ -16,7 +16,7 @@ Check out <a href = "https://github.com/adityapathak-cubastion/cubastion-hr-chat
 - Python and it's libraries - <a href = "https://huggingface.co/sentence-transformers">sentence-transformers</a>, fitz, regex and more!
 
 ## Methodology
-
+<img src = "https://github.com/adityapathak-cubastion/cubastion-hr-chatbot/blob/main/documentation/hr-chatbot-methodology.png">
 
 ## Acknowledgements
 A huge thank you to Akshay sir, Roshan sir, Himanshu sir, Dakshesh sir and Mayank for the constant guidance and support!<br>
