@@ -1,0 +1,93 @@
+an unfiltered look into me making daily notes about what steps i took, how i organise what i want to fix.. it gets a bit messy xd
+
+---- DOCUMENT CHAT -----
+<Cubastion's HR Chatbot>
+
+## 22nd jan (wednesday)
+
+1. collect documents - cubastion hr policy docs???
+2. extract text
+let's assume that for now, we won't be analyzing the images and only extract TEXT information from pdfs and word files.
+
+step 1 and 2 toh ho gaye (i think)
+- text extracted from 14 cubastion HR documents.
+- text extraction works for both .pdf files and .docx files.
+
+3. text chunking - divide extracted text into manageable chunks
+converting text to tokens using sentence-based chunking (because without it, chunks were looking weird, text wasn't really human readable - screenshot in the project folder) and all-mini-lm.
+
+issues at the end of the day
+- uneven sizing of chunks - some big, some small
+--- FIXED 15 minutes later lol - text processed before and after tokenization - removing special chars, whitespaces and making all text lowercase (I GUESS - jin pages me aise dot indexes the, usme dots aa rahi thi in the chunks but when getting post processed, dots got removed and few words were left behind.. that's why start waale chunks aise the because index pages waha the)
+- BUT AB ek aur problem hai. i want to keep some slashes as they add information (like he/she, his/her, clarification/additional info.). but special chars nahi hataunga toh wo index pages ke hazaar dots reh jayenge.
+--- FIXED. used regex to remove sequences of dots and leave special characters.
+- is it normal for words like cubastion to become cu bas tion, encashed become en cas hed..
+--- YES, its normal. but they can be recombined, thanks to the ## behind every split up word.
+--- FIXED.
+
+## 23rd jan (thursday)
+
+- using BertTokenizer instead of allminiLM as allminiLM tokenizer wasn't able to adhere to token limit.
+- cleaned up the code from yesterday
+- even added a custom way to access the doc id (and hence, doc name) of each chunk! these doc ids/name can be stored with the embeddings.
+
+4. generate embeddings - using all-miniLM-L6-v2..
+generated. dimensions = 384
+(later used all-mpnet-base-v2, 768 dimensions)
+
+5. store embeddings - used pinecone. at the moment, 69 records, just like 69 embeddings from 69 chunks.
+
+6. creating front end interface - with streamlit
+
+issues at the end of the day
+- currently, in pinecone, embeddings are stored with chunk ID. if i try to store with doc ID, like i printed them earlier, then it just updates the doc ID, losing all but the last chunk of that doc. so either i find another method - store how many chunks are from a doc somehow and then retrieve doc number/name that way when i have to
+--- FIXED
+- querry_llm waala function isn't working. read the pinecone + ollama collection on Edge, take help from copilot and fix the function.
+--- FIXED
+- make code more readable, make filenames better, get ready to export project folder to github!
+--- DONE
+
+## 24th january (friday)
+
+7. integrate with llama3.2 1b
+
+the project is pretty much done - LLM is generating the responses!
+
+however, it's quite slow and the response quality isn't THAT good, especially for short queries. need to refine.
+
+--- try the keywords thing (get keywords from prompt and make it mandatory for them to be in the response) and better prompting methods.
+--- try improving quality of embeddings, so they have more semantic differentiation from each other
+--- try implementing a feedback mechanism for responses
+
+## 27th january (monday)
+
+working much better when i don't tokenize the text while chunking. text should have just been preprocessed.
+
+## 28th january (tuesday)
+
+trying to get the application running on the server.. disk storage wasn't enough so got it increased.. had issues with mounting. also, quickly learnt docker with massive support from roshan sir.. cloned the repo on VM, tried to make docker container of app.. ran into issues with running ollama locally.
+
+remember to carefully copy all contents of local chatbot folder to the github repo folder on desktop, so that only the working, latest code is on there. no venvs, no documents, no cache, updated requirements.txt, updated code, updated dockerfile.. etc
+
+## 29th january (wednesday)
+
+project could have been finished easily by monday (or the weekend if i worked then) if i didn't spend time trying to dockerise the app..
+
+- added some predefined options for common queries.. they work quite well on an average!
+- also made some changes towards achieving better UX (such as adding dots to show that the answer is being generated)
+
+## WHAT CAN BE DONE NOW???
+
+i think ab iss se better application nahi ban sakta, unless
+- we add NER to detect entities like companies, names of people that are irrelevant to cubastion (for questions like 'tell me about xy policy of infosys' [asked by AK sir])
+- we fine tune the embedding model and the llm model on our dataset - the HR documents so that they capture nuances better and have more context while generating answers
+- we have some feedback mechanism for rating relevant and irrelevant answers
+- the FUSO Chatbot method of using the LLM twice OR some re-ranking method to find the most relevant portions from the retrieved chunks and outputting that only (for eg if query = "is it mandatory to wear an ID card at cubastion?", answer shouldn't involve additional details about the dress code and only talk about the ID card being mandatory)
+--- maybe this can be done by tokenizing and again encoding what the llm gave the first time, then comparing with the query again
+
+## FUTURE SCOPE
+
+- ability to save chats and have multiple chats at once, like gpt, copilot etc
+- greeting message
+- NER to detect other company name's in prompt - then answer "can not answer for this company" or sth??
+- learn docker properly
